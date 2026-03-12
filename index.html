@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InnovaLab 2026 | Estrategia de Océanos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #22d3ee;
+            --accent: #f43f5e;
+            --dark-bg: #020617;
+            --glass-strong: rgba(255, 255, 255, 0.05);
+            --glass-soft: rgba(255, 255, 255, 0.02);
+            --border-light: rgba(255, 255, 255, 0.1);
+            --accent-glow: rgba(99, 102, 241, 0.3);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--dark-bg);
+            background-attachment: fixed;
+            color: #f1f5f9;
+            min-height: 100vh;
+            width: 100vw;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            letter-spacing: -0.01em;
+        }
+
+
+        /* Cinematic Background */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(6, 182, 212, 0.05) 0%, transparent 40%);
+            z-index: -2;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.02;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .slide {
+            display: none;
+            min-height: 100vh;
+            width: 100%;
+            padding: 4rem;
+            animation: slideFade 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            position: relative;
+        }
+
+        .slide.active { display: flex; flex-direction: column; justify-content: center; }
+
+        @keyframes slideFade {
+            from { opacity: 0; filter: blur(20px); transform: scale(1.05); }
+            to { opacity: 1; filter: blur(0); transform: scale(1); }
+        }
+
+        .glass-card {
+            background: var(--glass-strong);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid var(--border-light);
+            border-radius: 4rem;
+            box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.7);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #fff 30%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Expert Focus Panels */
+        .info-panel {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 6, 23, 0.8);
+            backdrop-filter: blur(50px);
+            -webkit-backdrop-filter: blur(50px);
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 6rem;
+        }
+
+        .info-panel.open { display: flex; animation: fadeIn 0.4s ease forwards; }
+
+        .info-content {
+            max-width: 1400px;
+            width: 100%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 5rem;
+            padding: 6rem;
+            position: relative;
+            box-shadow: 0 100px 200px rgba(0,0,0,0.5);
+        }
+
+        .btn-close-panel {
+            position: absolute;
+            top: 3rem;
+            right: 3rem;
+            width: 5rem;
+            height: 5rem;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-close-panel:hover { background: rgba(255,255,255,0.2); transform: rotate(90deg); }
+
+        .premium-btn {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            color: #a5b4fc;
+            padding: 1.5rem 3rem;
+            border-radius: 2rem;
+            font-size: 1.1rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .premium-btn:hover { background: var(--primary); color: white; transform: translateY(-3px); box-shadow: 0 20px 40px rgba(99, 102, 241, 0.3); }
+
+        .premium-input {
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid rgba(255, 255, 255, 0.05);
+            border-radius: 2.5rem;
+            color: white;
+            padding: 2.5rem;
+            width: 100%;
+            font-size: 2rem;
+            transition: all 0.4s;
+        }
+        .premium-input:focus {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: var(--primary);
+            box-shadow: 0 0 50px rgba(99, 102, 241, 0.1);
+            outline: none;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; backdrop-filter: blur(0); } to { opacity: 1; backdrop-filter: blur(50px); } }
+
+        .cover-image-frame {
+            position: relative;
+            border-radius: 5rem;
+            overflow: hidden;
+            box-shadow: 0 0 100px rgba(0,0,0,0.5);
+        }
+        .cover-image-frame::after {
+            content: ""; position: absolute; inset: 0;
+            background: linear-gradient(to bottom, transparent 60%, var(--dark-bg) 100%);
+        }
+
+        .scroll-container::-webkit-scrollbar { width: 4px; }
+        .scroll-container::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+        
+        .errc-input-box { padding: 1.5rem; border-radius: 2rem; border-top: 4px solid transparent; }
+
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(2, 6, 23, 0.98);
+            backdrop-filter: blur(40px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .modal-overlay.active { display: flex; animation: fadeIn 0.5s ease; }
+        .modal-result {
+            max-width: 1200px; width: 100%;
+            background: linear-gradient(145deg, #0f172a, #020617);
+            border: 1px solid var(--glass-border);
+            border-radius: 4rem;
+            padding: 4rem;
+            box-shadow: 0 0 100px rgba(99, 102, 241, 0.15);
+        }
+
+        .audit-row {
+            padding: 1.8rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            gap: 2.5rem;
+        }
+        .audit-label {
+            font-size: 0.75rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            width: 120px;
+            flex-shrink: 0;
+        }
+        .audit-content { font-size: 1.1rem; color: #e2e8f0; }
+
+        .cover-image-container {
+            width: 100%; max-width: 850px;
+            margin: 1.5rem auto;
+            border-radius: 3rem;
+            overflow: hidden;
+            border: 2px solid var(--glass-border);
+        }
+        .cover-image { width: 100%; height: 350px; object-fit: cover; }
+
+        .progress-pill { height: 3px; flex: 1; background: rgba(255, 255, 255, 0.05); border-radius: 99px; }
+        .progress-pill.active { background: linear-gradient(90deg, var(--primary), var(--secondary)); height: 5px; }
+
+        .gallery-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            height: 550px;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+        .gallery-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 2rem;
+            padding: 2rem;
+            transition: all 0.4s;
+        }
+        .gallery-card:hover { transform: translateY(-10px); border-color: var(--primary); }
+
+        .orb {
+            position: fixed; width: 600px; height: 600px;
+            border-radius: 50%; filter: blur(120px);
+            z-index: -1; opacity: 0.15;
+            animation: orbFloat 20s infinite alternate;
+        }
+        @keyframes orbFloat { from { transform: translate(0,0) scale(1); } to { transform: translate(100px, 100px) scale(1.1); } }
+        .orb-alt {
+            position: fixed; border-radius: 50%; filter: blur(140px); z-index: -1; opacity: 0.25;
+            animation: orbMove 30s infinite alternate linear;
+        }
+        @keyframes orbMove { from { transform: translate(-10%, -10%); } to { transform: translate(10%, 10%); } }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div id="nav-pills-bar" class="fixed top-0 left-0 w-full p-8 flex justify-between items-center z-50 pointer-events-none">
+        <div class="flex gap-3 pointer-events-auto" id="nav-pills-container"></div>
+        <div class="pointer-events-auto">
+            <div class="glass-card px-8 py-4 border-white/10 bg-white/5 backdrop-blur-md flex items-center justify-center shadow-2xl">
+                <img src="https://i.imgur.com/cjfV02r.png" alt="Logo" class="h-10 md:h-12 w-auto filter brightness-125 contrast-125 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+            </div>
+        </div>
+    </div>
+
+    <div class="orb w-[800px] h-[800px] bg-indigo-600/20 top-[-10%] left-[-10%]"></div>
+    <div class="orb w-[600px] h-[600px] bg-cyan-600/10 bottom-[-10%] right-[-10%]" style="animation-delay: -10s"></div>
+
+    <main class="flex-grow flex flex-col h-full">
+        
+        <!-- SLIDE 0: PORTADA ELITE -->
+        <section class="slide active" id="slide-0">
+            <div class="max-w-[1700px] mx-auto w-full grid md:grid-cols-[1.2fr_0.8fr] gap-20 items-center">
+                <div class="space-y-16">
+                    <div class="inline-flex items-center gap-6 px-10 py-5 rounded-3xl bg-indigo-500/10 text-indigo-300 text-[14px] font-black tracking-[0.5em] uppercase border border-indigo-500/20">
+                        <span class="w-3 h-3 rounded-full bg-indigo-500 animate-ping"></span>
+                        Executive Laboratory 2026
+                    </div>
+                    <div class="space-y-4">
+                        <h1 class="text-6xl md:text-8xl font-black tracking-tightest leading-[0.8] gradient-text">
+                            Océano <br>Azul
+                        </h1>
+                        <p class="text-4xl text-slate-400 font-light max-w-xl leading-tight">
+                            El arte de la <span class="text-white font-black underline decoration-indigo-500/50 underline-offset-[10px]">Diferenciación Radical</span>.
+                        </p>
+                    </div>
+                    <div class="flex gap-20 items-center">
+                        <div class="h-px flex-grow bg-white/10"></div>
+                        <p class="text-[14px] font-black uppercase tracking-[1em] text-slate-500">InnovaLab Strategy</p>
+                    </div>
+                </div>
+                
+                <div class="cover-image-frame p-4 bg-white/5 h-[850px]">
+                    <img src="https://i.imgur.com/m9Ffk84.jpeg" alt="Strategy" class="w-full h-full object-cover rounded-[4rem]">
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 1: REGISTRO DE EQUIPO -->
+        <section class="slide" id="slide-1">
+            <div class="max-w-[1200px] mx-auto w-full text-center space-y-20">
+                <div class="space-y-8">
+                    <span class="text-indigo-400 font-black tracking-[1em] text-[14px] uppercase block">Workshop Entry</span>
+                    <h2 class="text-7xl font-black gradient-text uppercase tracking-tightest">¡Bienvenidos!</h2>
+                    <p class="text-2xl text-slate-400 font-light">Para comenzar el taller, ingresen el nombre de su equipo.</p>
+                </div>
+                
+                <div class="glass-card p-16 space-y-12 max-w-4xl mx-auto shadow-[0_0_100px_rgba(99,102,241,0.1)]">
+                    <div class="space-y-6">
+                        <label class="text-[14px] font-black text-slate-500 uppercase tracking-widest block text-left ml-10">Nombre del Equipo</label>
+                        <input type="text" id="team-name-input" class="premium-input text-center font-black text-4xl py-8" placeholder="Escribe aquí...">
+                    </div>
+                    <button id="btn-start-lab" class="bg-indigo-600 hover:bg-indigo-500 w-full py-8 rounded-[3rem] text-xl font-black uppercase tracking-[0.5em] transition-all hover:scale-[1.02] active:scale-95 shadow-[0_30px_60px_rgba(79,70,229,0.3)]">
+                        Iniciar Estrategia
+                    </button>
+                </div>
+
+                <div id="assigned-case-display" class="hidden">
+                    <p class="text-xl text-slate-500 font-bold uppercase tracking-[0.2em]">Caso Asignado:</p>
+                    <p id="case-name" class="text-3xl font-black text-cyan-400 mt-4"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 2: OCÉANO ROJO -->
+        <section class="slide" id="slide-2">
+            <div class="max-w-[1700px] mx-auto w-full">
+                <div class="flex justify-between items-center mb-16">
+                    <h2 class="text-6xl md:text-7xl font-black flex items-center gap-10">
+                        <span class="text-red-500">Océano</span> Rojo
+                    </h2>
+                    <button class="premium-btn scale-90" onclick="toggleInfo('info-red')">Diagnóstico Estratégico</button>
+                </div>
+                <div class="grid md:grid-cols-[1.5fr_1fr] gap-16 items-center">
+                    <p class="text-5xl text-slate-100 font-bold leading-tight tracking-tight">Industrias con límites definidos donde el <span class="text-red-500 bg-red-500/10 px-4 rounded-2xl">caos competitivo</span> devora los márgenes.</p>
+                    <div class="glass-card p-12 space-y-10">
+                        <ul class="space-y-6 text-2xl text-slate-400 font-light">
+                            <li class="flex items-start gap-6"><span class="text-red-500">✕</span><b>Guerra de Precios:</b> Comoditización total del valor.</li>
+                            <li class="flex items-start gap-6"><span class="text-red-500">✕</span><b>Demanda Finita:</b> La industria deja de crecer.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- Overlay Panel -->
+            <div id="info-red" class="info-panel">
+                <div class="info-content">
+                    <button class="btn-close-panel" onclick="toggleInfo('info-red')">✕</button>
+                    <div class="space-y-12">
+                        <div class="border-l-4 border-red-500 pl-8 mb-12">
+                            <h3 class="text-5xl font-black text-red-500 uppercase tracking-tighter mb-4">Caso: La Industria del Circo Tradicional</h3>
+                            <p class="text-2xl text-slate-400 font-light max-w-4xl">La industria estaba en declive. Competían por los mismos clientes con los mismos factores: animales, estrellas, payasos. El valor se basaba en la lucha de precios y los costos eran altísimos.</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-3 gap-10">
+                            <div class="p-8 bg-red-500/5 rounded-3xl border border-red-500/20">
+                                <p class="text-xl font-black text-red-400 mb-4 uppercase tracking-widest">Animales</p>
+                                <p class="text-lg text-slate-500 font-light">Actos con animales extremadamente costosos y logísticamente complejos.</p>
+                            </div>
+                            <div class="p-8 bg-red-500/5 rounded-3xl border border-red-500/20">
+                                <p class="text-xl font-black text-red-400 mb-4 uppercase tracking-widest">Estrellas</p>
+                                <p class="text-lg text-slate-500 font-light">Dependencia de artistas "estrella" que disparaban los costos de contratación.</p>
+                            </div>
+                            <div class="p-8 bg-red-500/5 rounded-3xl border border-red-500/20">
+                                <p class="text-xl font-black text-red-400 mb-4 uppercase tracking-widest">Payasos</p>
+                                <p class="text-lg text-slate-500 font-light">Humor tradicional y payasos que perdieron relevancia ante el público moderno.</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-12 p-8 bg-white/5 rounded-3xl border border-white/10">
+                            <p class="text-2xl text-slate-200 italic leading-tight">"Las reglas del juego ya existen en el Océano Rojo. La trampa es creer que son inamovibles."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 3: OCÉANO AZUL -->
+        <section class="slide" id="slide-3">
+            <div class="max-w-[1700px] mx-auto w-full">
+                <div class="flex justify-between items-center mb-16">
+                    <h2 class="text-6xl md:text-7xl font-black flex items-center gap-10">
+                        <span class="text-cyan-400">Océano</span> Azul
+                    </h2>
+                    <button class="premium-btn scale-90" style="border-color: #22d3ee; color: #22d3ee" onclick="toggleInfo('info-blue')">Insight Estratégico</button>
+                </div>
+                <div class="grid md:grid-cols-[1.5fr_1fr] gap-16 items-center">
+                    <p class="text-5xl text-slate-100 font-bold leading-tight tracking-tight">Espacios <span class="text-cyan-400 bg-cyan-400/10 px-4 rounded-2xl">incontestados</span> donde la competencia se vuelve irrelevante.</p>
+                    <div class="glass-card p-12 space-y-10">
+                        <ul class="space-y-6 text-2xl text-slate-400 font-light">
+                            <li class="flex items-start gap-6"><span class="text-cyan-400">★</span><b>Nuevos Mercados:</b> Identificar y captar a los "no clientes".</li>
+                            <li class="flex items-start gap-6"><span class="text-cyan-400">★</span><b>Valor Único:</b> Innovación de valor como filosofía central.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- Overlay Panel -->
+            <div id="info-blue" class="info-panel">
+                <div class="info-content" style="border-color: rgba(34, 211, 238, 0.2)">
+                    <button class="btn-close-panel" onclick="toggleInfo('info-blue')">✕</button>
+                    <div class="space-y-12">
+                        <h3 class="text-8xl font-black text-cyan-400 uppercase tracking-tighter">La Libertad del Azul</h3>
+                        <p class="text-5xl text-slate-200 leading-tight italic">"No se trata de nadar más rápido, sino de cambiar el mapa del océano."</p>
+                        <div class="grid grid-cols-2 gap-12">
+                            <div class="p-12 bg-white/5 rounded-3xl border border-cyan-500/20">
+                                <p class="text-4xl font-bold text-cyan-300 mb-6">Fronteras Renovadas</p>
+                                <p class="text-2xl text-slate-400 font-light">Mapeo de nuevas utilidades para el comprador que nadie está atendiendo.</p>
+                            </div>
+                            <div class="p-12 bg-white/5 rounded-3xl border border-cyan-500/20">
+                                <p class="text-4xl font-bold text-cyan-300 mb-6">Escala Ilimitada</p>
+                                <p class="text-2xl text-slate-400 font-light">Crecimiento basado en valor, no en destrucción del rival.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 4: ADN ESTRATÉGICO -->
+        <section class="slide" id="slide-4">
+            <div class="max-w-[1700px] mx-auto w-full">
+                <span class="text-indigo-400 font-black tracking-[0.5em] text-[12px] uppercase block mb-6 text-center">Benchmark Divergente</span>
+                <h2 class="text-7xl font-black mb-16 text-center gradient-text uppercase tracking-tightest">ADN Estratégico</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                    <div class="glass-card p-10 border-white/5 space-y-8 flex flex-col justify-center cursor-pointer hover:bg-white/[0.05] hover:scale-105 transition-all duration-500 group" onclick="toggleInfo('info-adn-space')">
+                        <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest text-center group-hover:text-indigo-400">Espacio de Mercado</span>
+                        <div class="space-y-6">
+                            <div class="p-6 rounded-2xl bg-red-500/5 border border-red-500/10">
+                                <p class="text-red-400 font-black text-2xl mb-2">Rojo</p>
+                                <p class="text-lg text-slate-400 leading-relaxed font-light">Competir en el espacio <br>existente y saturado.</p>
+                            </div>
+                            <div class="p-6 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 shadow-[0_0_50px_rgba(34,211,238,0.1)]">
+                                <p class="text-cyan-400 font-black text-2xl mb-2">Azul</p>
+                                <p class="text-lg text-slate-100 leading-relaxed font-light">Crear un espacio <br>totalmente incontestado.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glass-card p-10 border-white/5 space-y-8 flex flex-col justify-center cursor-pointer hover:bg-white/[0.05] hover:scale-105 transition-all duration-500 group" onclick="toggleInfo('info-adn-demand')">
+                        <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest text-center group-hover:text-indigo-400">Foco en Demanda</span>
+                        <div class="space-y-6">
+                            <div class="p-6 rounded-2xl bg-red-500/5 border border-red-500/10">
+                                <p class="text-red-400 font-black text-2xl mb-2">Rojo</p>
+                                <p class="text-lg text-slate-400 leading-relaxed font-light">Explotar la demanda <br>histórica existente.</p>
+                            </div>
+                            <div class="p-6 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 shadow-[0_0_50px_rgba(34,211,238,0.1)]">
+                                <p class="text-cyan-400 font-black text-2xl mb-2">Azul</p>
+                                <p class="text-lg text-slate-100 leading-relaxed font-light">Crear y capturar <br>nueva demanda de valor.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glass-card p-10 border-white/5 space-y-8 flex flex-col justify-center cursor-pointer hover:bg-white/[0.05] hover:scale-105 transition-all duration-500 group" onclick="toggleInfo('info-adn-tradeoff')">
+                        <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest text-center group-hover:text-indigo-400">Regla Valor / Costo</span>
+                        <div class="space-y-6">
+                            <div class="p-6 rounded-2xl bg-red-500/5 border border-red-500/10">
+                                <p class="text-red-400 font-black text-2xl mb-2">Rojo</p>
+                                <p class="text-lg text-slate-400 leading-relaxed font-light">Ceder entre valor <br>o bajo costo (Trade-off).</p>
+                            </div>
+                            <div class="p-6 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 shadow-[0_0_50px_rgba(34,211,238,0.1)]">
+                                <p class="text-cyan-400 font-black text-2xl mb-2">Azul</p>
+                                <p class="text-lg text-slate-100 leading-relaxed font-light">Romper el compromiso <br>simultáneamente.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ADN Overlays -->
+            <div id="info-adn-space" class="info-panel">
+                <div class="info-content">
+                    <button class="btn-close-panel" onclick="toggleInfo('info-adn-space')">✕</button>
+                    <div class="space-y-12">
+                        <h3 class="text-8xl font-black text-indigo-400 uppercase tracking-tighter">Espacio de Mercado</h3>
+                        <p class="text-4xl text-slate-200 leading-relaxed">En el **Océano Rojo**, los límites de la industria están definidos y aceptados. En el **Océano Azul**, se cruzan estos límites para crear espacios donde la competencia no existe.</p>
+                        <div class="grid grid-cols-2 gap-12">
+                            <div class="p-12 bg-red-500/5 rounded-3xl border border-red-500/20"><p class="text-4xl font-bold text-red-400 mb-6">Fronteras Fijas</p><p class="text-2xl text-slate-400">Aceptación de las reglas del sector sin cuestionar.</p></div>
+                            <div class="p-12 bg-cyan-500/10 rounded-3xl border border-cyan-500/30"><p class="text-4xl font-bold text-cyan-300 mb-6">Fronteras Líquidas</p><p class="text-2xl text-slate-200">Reconstrucción de elementos para crear un nuevo mercado.</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="info-adn-demand" class="info-panel">
+                <div class="info-content">
+                    <button class="btn-close-panel" onclick="toggleInfo('info-adn-demand')">✕</button>
+                    <div class="space-y-12">
+                        <h3 class="text-8xl font-black text-indigo-400 uppercase tracking-tighter">Foco en Demanda</h3>
+                        <p class="text-4xl text-slate-200 leading-relaxed">Mientras el Rojo lucha por los mismos clientes de siempre, el Azul mira hacia los **No Clientes** para expandir el mercado.</p>
+                        <div class="grid grid-cols-2 gap-12">
+                            <div class="p-12 bg-red-500/5 rounded-3xl border border-red-500/20"><p class="text-4xl font-bold text-red-400 mb-6">Segmentación</p><p class="text-2xl text-slate-400">Dividir el mercado en nichos cada vez más pequeños.</p></div>
+                            <div class="p-12 bg-cyan-500/10 rounded-3xl border border-cyan-500/30"><p class="text-4xl font-bold text-cyan-300 mb-6">Agregación</p><p class="text-2xl text-slate-200">Encontrar puntos comunes entre los no clientes para crear masa crítica.</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="info-adn-tradeoff" class="info-panel">
+                <div class="info-content">
+                    <button class="btn-close-panel" onclick="toggleInfo('info-adn-tradeoff')">✕</button>
+                    <div class="space-y-12">
+                        <h3 class="text-8xl font-black text-indigo-400 uppercase tracking-tighter">Regla Valor / Costo</h3>
+                        <p class="text-4xl text-slate-200 leading-relaxed">La estrategia tradicional dicta que si quieres más calidad, debes pagar más. El Océano Azul propone que el **bajo costo y el alto valor** son posibles simultáneamente.</p>
+                        <div class="grid grid-cols-2 gap-12">
+                            <div class="p-12 bg-red-500/5 rounded-3xl border border-red-500/20"><p class="text-4xl font-bold text-red-400 mb-6">Trade-off</p><p class="text-2xl text-slate-400">Elegir entre diferenciación o bajo costo.</p></div>
+                            <div class="p-12 bg-cyan-500/10 rounded-3xl border border-cyan-500/30"><p class="text-4xl font-bold text-cyan-300 mb-6">Sincronización</p><p class="text-2xl text-slate-200">Lograr ambos eliminando lo innecesario y potenciando lo único.</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 5: INNOVACIÓN DE VALOR -->
+        <section class="slide" id="slide-5">
+            <div class="max-w-[1700px] mx-auto w-full">
+                <div class="flex justify-between items-end mb-20">
+                    <h2 class="text-7xl md:text-8xl font-black leading-none gradient-text">Innovación<br>de Valor</h2>
+                    <button class="premium-btn mb-6 scale-90" onclick="toggleInfo('info-val')">Teoría de Sistemas</button>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-20">
+                    <div class="glass-card p-14 flex flex-col justify-center space-y-14 h-[550px] relative overflow-hidden">
+                        <div class="absolute -top-10 -right-10 text-[15rem] font-black opacity-[0.02]">∑</div>
+                        <div class="flex items-center gap-10">
+                            <div class="w-32 h-32 rounded-[2rem] bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center">
+                                <span class="text-6xl text-cyan-300 font-black">↑</span>
+                            </div>
+                            <div class="space-y-2">
+                                <p class="text-5xl font-black text-white">VALOR</p>
+                                <p class="text-lg text-slate-500 font-bold uppercase tracking-[0.4em]">Para el Cliente</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-10">
+                            <div class="w-32 h-32 rounded-[2rem] bg-red-500/20 border border-red-500/30 flex items-center justify-center">
+                                <span class="text-6xl text-red-500 font-black">↓</span>
+                            </div>
+                            <div class="space-y-2">
+                                <p class="text-5xl font-black text-white">COSTO</p>
+                                <p class="text-lg text-slate-500 font-bold uppercase tracking-[0.4em]">Para la Empresa</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col justify-center space-y-10">
+                        <p class="text-5xl font-light text-slate-200 leading-tight">La innovación de valor <span class="text-indigo-400 font-black">liquida</span> el compromiso valor-costo.</p>
+                        <p class="text-2xl text-slate-400 italic leading-relaxed pl-8 border-l-2 border-indigo-500/30">Busca simultáneamente aumentar el valor para los clientes y reducir los costos. No es solo marketing, es un cambio en los límites de la industria.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Overlay Panel -->
+            <div id="info-val" class="info-panel">
+                <div class="info-content" style="border-color: rgba(99, 102, 241, 0.2)">
+                    <button class="btn-close-panel" onclick="toggleInfo('info-val')">✕</button>
+                    <div class="space-y-16">
+                        <h3 class="text-8xl font-black text-indigo-400 uppercase tracking-tighter">Sincronización de Valor</h3>
+                        <p class="text-5xl text-slate-200 leading-tight">"Ocurre cuando las empresas logran alinear la innovación con la utilidad, el precio y las actividades de costo."</p>
+                        <div class="grid grid-cols-2 gap-16">
+                            <div class="glass-card p-12 bg-white/2">
+                                <h5 class="text-4xl font-black text-white mb-6 uppercase">Salto de Valor</h5>
+                                <p class="text-2xl text-slate-400">Multiplicar la utilidad para el comprador sin precedentes.</p>
+                            </div>
+                            <div class="glass-card p-12 bg-white/2">
+                                <h5 class="text-4xl font-black text-white mb-6 uppercase">Estructura Ágil</h5>
+                                <p class="text-2xl text-slate-400">Eliminación de redundancias que hinflan el costo operativo.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 6: MATRIZ ERRC EXECUTIVE -->
+        <section class="slide" id="slide-6">
+            <div class="max-w-[1700px] mx-auto w-full">
+                <span class="text-emerald-500 font-black tracking-[1em] text-[12px] uppercase block mb-6 text-center">The Framework</span>
+                <h2 class="text-7xl font-black mb-16 text-center uppercase tracking-widest text-white/[0.03] leading-none">Matriz ERRC</h2>
+                <div class="grid grid-cols-4 gap-8 -mt-20">
+                    <div class="glass-card p-10 border-red-500/20 text-center flex flex-col justify-between min-h-[500px] bg-red-500/[0.02] hover:bg-red-500/[0.08] hover:scale-105 transition-all cursor-pointer group" onclick="toggleInfo('info-errc-elim')">
+                        <span class="text-7xl mb-6 text-red-500 opacity-20 group-hover:opacity-100 transition-opacity">✕</span>
+                        <div>
+                            <h3 class="text-4xl font-black text-red-500 mb-6 uppercase tracking-tighter">Eliminar</h3>
+                            <p class="text-lg text-slate-400 font-light leading-relaxed">Factores que la industria da por sentados pero que **ya no añaden valor**. Se eliminan para reducir costos drásticamente.</p>
+                        </div>
+                    </div>
+                    <div class="glass-card p-10 border-orange-500/20 text-center flex flex-col justify-between min-h-[500px] bg-orange-500/[0.02] hover:bg-orange-500/[0.08] hover:scale-105 transition-all cursor-pointer group" onclick="toggleInfo('info-errc-red')">
+                        <span class="text-7xl mb-6 text-orange-500 opacity-20 group-hover:opacity-100 transition-opacity">↘</span>
+                        <div>
+                            <h3 class="text-4xl font-black text-orange-500 mb-6 uppercase tracking-tighter">Reducir</h3>
+                            <p class="text-lg text-slate-400 font-light leading-relaxed">Variables que se han sobre-diseñado en la competencia. Al reducirlas por debajo del estándar, se libera capital crítico.</p>
+                        </div>
+                    </div>
+                    <div class="glass-card p-10 border-blue-500/20 text-center flex flex-col justify-between min-h-[500px] bg-blue-500/[0.02] hover:bg-blue-500/[0.08] hover:scale-105 transition-all cursor-pointer group" onclick="toggleInfo('info-errc-elev')">
+                        <span class="text-7xl mb-6 text-blue-500 opacity-20 group-hover:opacity-100 transition-opacity">↗</span>
+                        <div>
+                            <h3 class="text-4xl font-black text-blue-500 mb-6 uppercase tracking-tighter">Elevar</h3>
+                            <p class="text-lg text-slate-400 font-light leading-relaxed">Aumentar la calidad de atributos clave que el cliente valora por encima de todo, diferenciándote de la oferta común.</p>
+                        </div>
+                    </div>
+                    <div class="glass-card p-10 border-green-500/20 text-center flex flex-col justify-between min-h-[500px] bg-green-500/[0.02] hover:bg-green-500/[0.08] hover:scale-105 transition-all cursor-pointer group" onclick="toggleInfo('info-errc-crea')">
+                        <span class="text-7xl mb-6 text-green-500 opacity-20 group-hover:opacity-100 transition-opacity">﹢</span>
+                        <div>
+                            <h3 class="text-4xl font-black text-green-500 mb-6 uppercase tracking-tighter">Crear</h3>
+                            <p class="text-lg text-slate-400 font-light leading-relaxed">Descubrir y ofrecer fuentes de valor totalmente nuevas. Aquí es donde se crea la **nueva demanda** y el Océano Azul.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ERRC General Overlays -->
+                <div id="info-errc-elim" class="info-panel">
+                    <div class="info-content">
+                        <button class="btn-close-panel" onclick="toggleInfo('info-errc-elim')">✕</button>
+                        <h3 class="text-7xl font-black text-red-500 uppercase mb-8">Estrategia de Eliminación</h3>
+                        <p class="text-4xl text-slate-200 leading-relaxed">Pregunta clave: **¿Cuáles de los factores que la industria da por sentados deben eliminarse?**</p>
+                        <div class="mt-12 p-12 bg-white/5 rounded-3xl border border-red-500/20">
+                            <p class="text-3xl text-slate-300 italic">"Eliminar no es solo recortar; es purgar elementos que el cliente ya no aprecia para liberar recursos hacia lo que realmente importa."</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="info-errc-red" class="info-panel">
+                    <div class="info-content">
+                        <button class="btn-close-panel" onclick="toggleInfo('info-errc-red')">✕</button>
+                        <h3 class="text-7xl font-black text-orange-500 uppercase mb-8">Estrategia de Reducción</h3>
+                        <p class="text-4xl text-slate-200 leading-relaxed">Pregunta clave: **¿Qué factores deben reducirse muy por debajo de la norma de la industria?**</p>
+                        <div class="mt-12 p-12 bg-white/5 rounded-3xl border border-orange-500/20">
+                            <p class="text-3xl text-slate-300 italic">"Se trata de identificar excesos competitivos donde las empresas invierten de más sin generar una utilidad real para el comprador."</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="info-errc-elev" class="info-panel">
+                    <div class="info-content">
+                        <button class="btn-close-panel" onclick="toggleInfo('info-errc-elev')">✕</button>
+                        <h3 class="text-7xl font-black text-blue-500 uppercase mb-8">Estrategia de Incremento</h3>
+                        <p class="text-4xl text-slate-200 leading-relaxed">Pregunta clave: **¿Qué factores deben elevarse muy por encima de la norma de la industria?**</p>
+                        <div class="mt-12 p-12 bg-white/5 rounded-3xl border border-blue-500/20">
+                            <p class="text-3xl text-slate-300 italic">"Eleva aquello que te hace único y que resuelve el dolor principal de tu cliente de manera radical."</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="info-errc-crea" class="info-panel">
+                    <div class="info-content">
+                        <button class="btn-close-panel" onclick="toggleInfo('info-errc-crea')">✕</button>
+                        <h3 class="text-7xl font-black text-green-500 uppercase mb-8">Estrategia de Creación</h3>
+                        <p class="text-4xl text-slate-200 leading-relaxed">Pregunta clave: **¿Qué factores deben crearse que la industria nunca haya ofrecido?**</p>
+                        <div class="mt-12 p-12 bg-white/5 rounded-3xl border border-green-500/20">
+                            <p class="text-3xl text-slate-300 italic">"La creación es el motor del Océano Azul. Es donde inventas nuevas reglas y descubres nuevos grupos de clientes."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 7: CASO MAESTRO -->
+        <section class="slide" id="slide-7">
+            <div class="max-w-[1700px] mx-auto w-full h-full flex flex-col">
+                <div class="flex justify-between items-end mb-12">
+                    <div>
+                        <span class="text-indigo-400 font-black tracking-[0.5em] uppercase text-[12px] mb-2 block">Reconstructionist Case Study</span>
+                        <h2 class="text-6xl md:text-7xl font-black leading-none uppercase tracking-tightest">Cirque du <span class="gradient-text">Soleil</span></h2>
+                    </div>
+                    <div class="flex gap-10">
+                        <button id="btn-red" class="premium-btn border-red-500/30 text-red-500 bg-red-500/5 hover:bg-red-500/20">Modelo Rojo</button>
+                        <button id="btn-blue" class="premium-btn border-cyan-500/30 text-cyan-400 bg-cyan-500/5 hover:bg-cyan-500/20">Estrategia Azul</button>
+                        <button class="premium-btn border-yellow-500/30 text-yellow-500 bg-yellow-500/5 hover:bg-yellow-500/20" onclick="toggleInfo('info-yellow-tail')">Caso: [yellow tail]</button>
+                        <button class="premium-btn border-emerald-500/30 text-emerald-400 bg-emerald-500/5 hover:bg-emerald-500/20" onclick="toggleInfo('info-cirque-errc')">Matriz ERRC</button>
+                    </div>
+                </div>
+                <!-- ERRC Overlay for Case Study -->
+                <div id="info-cirque-errc" class="info-panel">
+                    <div class="info-content" style="border-color: rgba(16, 185, 129, 0.4); background: rgba(2, 6, 23, 0.95)">
+                        <button class="btn-close-panel" onclick="toggleInfo('info-cirque-errc')">✕</button>
+                        <div class="space-y-12">
+                            <h3 class="text-8xl font-black text-emerald-400 uppercase tracking-tighter text-center">Matriz ERRC: Cirque du Soleil</h3>
+                            <div class="grid grid-cols-2 gap-12">
+                                <div class="p-10 bg-red-500/10 rounded-3xl border border-red-500/30">
+                                    <p class="text-5xl font-black text-red-400 mb-6 uppercase">Eliminar</p>
+                                    <ul class="text-3xl text-slate-100 space-y-4 font-medium">
+                                        <li>• Actos con animales</li>
+                                        <li>• La "estrella" del circo</li>
+                                    </ul>
+                                </div>
+                                <div class="p-10 bg-orange-500/10 rounded-3xl border border-orange-500/30">
+                                    <p class="text-5xl font-black text-orange-400 mb-6 uppercase">Reducir</p>
+                                    <ul class="text-3xl text-slate-100 space-y-4 font-medium">
+                                        <li>• El número de carpas</li>
+                                        <li>• El humor de payasos</li>
+                                    </ul>
+                                </div>
+                                <div class="p-10 bg-blue-500/10 rounded-3xl border border-blue-500/30">
+                                    <p class="text-5xl font-black text-blue-400 mb-6 uppercase">Elevar</p>
+                                    <ul class="text-3xl text-slate-100 space-y-4 font-medium">
+                                        <li>• La singularidad de la carpa</li>
+                                        <li>• La complejidad de las acrobacias</li>
+                                    </ul>
+                                </div>
+                                <div class="p-10 bg-green-500/10 rounded-3xl border border-green-500/30">
+                                    <p class="text-5xl font-black text-green-400 mb-6 uppercase">Crear</p>
+                                    <ul class="text-3xl text-slate-100 space-y-4 font-medium">
+                                        <li>• Un tema narrativo único</li>
+                                        <li>• Música y danza artística</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Yellow Tail Case Overlay -->
+                <div id="info-yellow-tail" class="info-panel">
+                    <div class="info-content" style="border-color: rgba(234, 179, 8, 0.4); background: rgba(12, 10, 2, 0.98)">
+                        <button class="btn-close-panel" onclick="toggleInfo('info-yellow-tail')">✕</button>
+                        <div class="grid md:grid-cols-2 gap-16">
+                            <div class="space-y-10">
+                                <h3 class="text-7xl font-black text-yellow-500 uppercase tracking-tighter">[yellow tail]</h3>
+                                <p class="text-4xl text-slate-200 font-light leading-tight">La democratización del vino: <span class="text-yellow-500 font-bold">Un Océano Azul en una industria saturada.</span></p>
+                                <div class="p-8 border-l-4 border-yellow-500 bg-yellow-500/5 space-y-4">
+                                    <p class="text-2xl text-white font-bold">Ruptura del Teoricismo:</p>
+                                    <p class="text-xl text-slate-400 font-light">En lugar de competir por términos técnicos (taninos, barrica, añada), [yellow tail] se enfocó en un vino social, fácil de entender y de beber.</p>
+                                </div>
+                            </div>
+                            <div class="glass-card p-10 bg-white/2 space-y-8">
+                                <div class="grid grid-cols-2 gap-6">
+                                    <div class="p-6 bg-red-500/10 rounded-2xl border border-red-500/20 text-center">
+                                        <p class="text-red-400 font-black text-[10px] uppercase mb-2">Eliminado</p>
+                                        <p class="text-white font-black">Complejidad Técnica</p>
+                                    </div>
+                                    <div class="p-6 bg-orange-500/10 rounded-2xl border border-orange-500/20 text-center">
+                                        <p class="text-orange-400 font-black text-[10px] uppercase mb-2">Reducido</p>
+                                        <p class="text-white font-black">Presupuesto Marketing</p>
+                                    </div>
+                                    <div class="p-6 bg-blue-500/10 rounded-2xl border border-blue-500/20 text-center">
+                                        <p class="text-blue-400 font-black text-[10px] uppercase mb-2">Elevado</p>
+                                        <p class="text-white font-black">Facilidad de Compra</p>
+                                    </div>
+                                    <div class="p-6 bg-green-500/10 rounded-2xl border border-green-500/20 text-center">
+                                        <p class="text-green-400 font-black text-[10px] uppercase mb-2">Creado</p>
+                                        <p class="text-white font-black">Divertimento Social</p>
+                                    </div>
+                                </div>
+                                <div class="pt-8 border-t border-white/10 text-center">
+                                    <p class="text-5xl font-black text-white">#1</p>
+                                    <p class="text-xs text-slate-500 uppercase tracking-widest mt-2">Vino Importado en USA en tiempo récord</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid md:grid-cols-[1.5fr_1fr] gap-20 items-stretch flex-grow">
+                    <div class="glass-card p-4 border-white/5 bg-slate-950/40 relative overflow-hidden group shadow-2xl flex flex-col">
+                        <canvas id="cirqueCanvas" class="flex-grow w-full"></canvas>
+                        <div class="absolute bottom-10 left-10 flex gap-10 opacity-30 group-hover:opacity-100 transition-opacity">
+                            <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Cuadro de Estrategia Proyectado</span>
+                        </div>
+                    </div>
+                    <div class="space-y-10 flex flex-col justify-center">
+                        <div class="glass-card p-12 border-indigo-500/20 bg-indigo-500/[0.03]">
+                            <h4 class="text-indigo-400 font-black uppercase text-[12px] tracking-[0.4em] mb-8">Creando un Océano Azul</h4>
+                            <p class="text-2xl text-slate-200 font-light italic leading-tight mb-10">
+                                "Cirque du Soleil <span class="text-indigo-400 font-bold">no compitió</span>. Creó un nuevo espacio combinando lo mejor del circo con la <span class="text-cyan-400 font-bold">sofisticación del teatro</span>."
+                            </p>
+                            <div class="space-y-6 pt-10 border-t border-white/10">
+                                <ul class="text-xl text-slate-400 space-y-4 font-light">
+                                    <li class="flex gap-4"><span class="text-indigo-500">◆</span><b>Nuevo Target:</b> No era el público infantil, sino adultos dispuestos a pagar precio premium.</li>
+                                    <li class="flex gap-4"><span class="text-indigo-500">◆</span><b>Híbrido Único:</b> Mezcla de Narrativa + Ópera + Circo de alta precisión.</li>
+                                    <li class="flex gap-4"><span class="text-indigo-500">◆</span><b>Estrategia de Valor:</b> Eliminación radical de costos de "industria roja".</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-10">
+                            <div class="p-12 rounded-[3rem] bg-indigo-500/10 border border-indigo-500/20 text-center">
+                                <span class="block text-6xl font-black text-white mb-4">300x</span>
+                                <p class="text-xl text-slate-500 uppercase font-extrabold tracking-widest">Precio Entrada</p>
+                            </div>
+                            <div class="p-12 rounded-[3rem] bg-indigo-500/10 border border-indigo-500/20 text-center">
+                                <span class="block text-6xl font-black text-white mb-4">Nuevos</span>
+                                <p class="text-xl text-slate-500 uppercase font-extrabold tracking-widest">No Clientes</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 8: BLUEPRINT TALLER -->
+        <section class="slide" id="slide-8">
+            <div class="max-w-[1700px] mx-auto w-full h-full flex flex-col pt-16">
+                <!-- Header High Impact -->
+                <!-- Header High Impact: Instrucciones del Taller -->
+                <div class="grid md:grid-cols-[1.2fr_1.8fr] gap-12 mb-12">
+                    <div class="space-y-8">
+                        <div>
+                            <span class="text-indigo-500 font-black tracking-[0.5em] text-[14px] uppercase block mb-4">Strategic Mission</span>
+                            <h2 class="text-5xl font-black leading-tight gradient-text uppercase tracking-tighter" id="workshop-dynamic-title">
+                                ¡Tu equipo ha sido asignado al caso de <span class="text-white underline decoration-indigo-500/50 underline-offset-8">Gimnasios</span>!
+                            </h2>
+                        </div>
+                        <p class="text-2xl text-slate-400 font-light leading-relaxed">
+                            Apliquen la Matriz ERRC para generar una propuesta de <span class="text-cyan-400 font-bold">Océano Azul</span>.
+                        </p>
+                    </div>
+
+                    <div class="glass-card p-10 border-indigo-500/30 bg-indigo-500/[0.02] shadow-[0_0_80px_rgba(99,102,241,0.1)]">
+                        <div class="flex items-center gap-6 mb-8">
+                            <span class="text-3xl">✍️</span>
+                            <h4 class="text-2xl font-black text-white uppercase tracking-widest">Instrucciones del Taller</h4>
+                        </div>
+                        <div class="grid grid-cols-2 gap-x-10 gap-y-8">
+                            <div class="space-y-2 border-l-2 border-slate-700 pl-6">
+                                <p class="text-indigo-400 font-black text-xs uppercase tracking-widest">Paso 1 (5 min)</p>
+                                <p class="text-white font-bold text-lg">Análisis Océano Rojo</p>
+                                <p class="text-sm text-slate-500 leading-snug">Identifiquen los factores de competencia en la industria.</p>
+                            </div>
+                            <div class="space-y-2 border-l-2 border-slate-700 pl-6">
+                                <p class="text-indigo-400 font-black text-xs uppercase tracking-widest">Paso 2 (15 min)</p>
+                                <p class="text-white font-bold text-lg">Matriz ERRC</p>
+                                <p class="text-sm text-slate-500 leading-snug">Utilicen los cuadrantes para idear su nuevo concepto.</p>
+                            </div>
+                            <div class="space-y-2 border-l-2 border-slate-700 pl-6">
+                                <p class="text-indigo-400 font-black text-xs uppercase tracking-widest">Paso 3</p>
+                                <p class="text-white font-bold text-lg">Generen el Gráfico</p>
+                                <p class="text-sm text-slate-500 leading-snug">Hagan clic en el botón para ver su curva de valor.</p>
+                            </div>
+                            <div class="space-y-2 border-l-2 border-slate-700 pl-6">
+                                <p class="text-indigo-400 font-black text-xs uppercase tracking-widest">Paso 4 (10 min)</p>
+                                <p class="text-white font-bold text-lg">Presentación</p>
+                                <p class="text-sm text-slate-500 leading-snug">Expliquen su propuesta final al grupo.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-[1fr_1.5fr] gap-24 flex-grow">
+                    <!-- Inputs de Identidad -->
+                    <div class="space-y-12">
+                        <div class="space-y-6">
+                            <label class="text-[14px] font-black text-slate-500 uppercase tracking-widest ml-10">Concepto de Innovación</label>
+                            <input type="text" id="p-name" class="premium-input font-black text-3xl py-8 px-10" placeholder="¿Cuál es tu marca Azul?">
+                        </div>
+                        <div class="space-y-6 flex-grow flex flex-col">
+                            <label class="text-[14px] font-black text-slate-500 uppercase tracking-widest ml-10">La Ruptura (Status Quo)</label>
+                            <textarea id="p-red-context" class="premium-input flex-grow py-8 px-10 resize-none font-light text-xl leading-tight" placeholder="Define el dolor actual del mercado que vas a solucionar..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Cuadrícula ERRC de Alta Resolución -->
+                    <div class="flex flex-col gap-12">
+                        <div class="grid grid-cols-2 gap-8 flex-grow">
+                            <div class="glass-card p-10 bg-red-500/5 group hover:bg-red-500/10 border-red-500/20 flex flex-col">
+                                <span class="text-[10px] font-black text-red-500 uppercase tracking-[0.4em] mb-4 opacity-50">Eliminar</span>
+                                <textarea id="user-elim" class="flex-grow bg-transparent text-2xl font-bold text-white outline-none resize-none placeholder:text-red-950" placeholder="¿Qué obsolescencia vas a purgar?"></textarea>
+                            </div>
+                            <div class="glass-card p-10 bg-orange-500/5 group hover:bg-orange-500/10 border-orange-500/20 flex flex-col">
+                                <span class="text-[10px] font-black text-orange-400 uppercase tracking-[0.4em] mb-4 opacity-50">Reducir</span>
+                                <textarea id="user-red" class="flex-grow bg-transparent text-2xl font-bold text-white outline-none resize-none placeholder:text-orange-900" placeholder="¿Dónde harás ahorro inteligente?"></textarea>
+                            </div>
+                            <div class="glass-card p-10 bg-blue-500/5 group hover:bg-blue-500/10 border-blue-500/20 flex flex-col">
+                                <span class="text-[10px] font-black text-cyan-400 uppercase tracking-[0.4em] mb-4 opacity-50">Elevar</span>
+                                <textarea id="user-inc" class="flex-grow bg-transparent text-2xl font-bold text-white outline-none resize-none placeholder:text-blue-900" placeholder="¿Qué valor llevarás al máximo?"></textarea>
+                            </div>
+                            <div class="glass-card p-10 bg-green-500/5 group hover:bg-green-500/10 border-green-500/20 flex flex-col">
+                                <span class="text-[10px] font-black text-green-400 uppercase tracking-[0.4em] mb-4 opacity-50">Crear</span>
+                                <textarea id="user-crear" class="flex-grow bg-transparent text-2xl font-bold text-white outline-none resize-none placeholder:text-green-950" placeholder="¿Qué magia inédita vas a proponer?"></textarea>
+                            </div>
+                        </div>
+                        <button id="final-unlock-btn" class="bg-indigo-600 hover:bg-indigo-500 w-full py-10 rounded-[2.5rem] text-xl font-black uppercase tracking-[0.6em] shadow-[0_40px_100px_rgba(79,70,229,0.4)] transition-all hover:scale-[1.02] active:scale-95">
+                            Forjar Estrategia Azul
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 9: GALERÍA -->
+        <section class="slide" id="slide-9">
+            <div class="max-w-[1700px] mx-auto w-full h-full flex flex-col">
+                <div class="flex justify-between items-end mb-16">
+                    <div>
+                        <h2 class="text-9xl font-black tracking-tighter leading-none uppercase gradient-text">InnovaLab <br><span class="text-white">Community</span></h2>
+                        <p class="text-4xl text-slate-500 font-light mt-6 italic">Laboratorio Colaborativo en Tiempo Real</p>
+                    </div>
+                    <div class="px-10 py-5 rounded-3xl bg-emerald-500/5 text-emerald-400 font-black border border-emerald-500/10 text-[12px] flex items-center gap-6 tracking-[0.4em]">
+                        <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
+                        LIVE SYNC ACTIVE
+                    </div>
+                </div>
+                <div class="gallery-container scroll-container flex-grow pr-6" id="gallery-body" style="grid-template-columns: repeat(auto-fill, minmax(450px, 1fr)); gap: 2.5rem;">
+                    <!-- Cards will be injected here -->
+                </div>
+
+                <!-- Reflection Section based on Source -->
+                <div class="mt-12 glass-card p-12 bg-white/5 border-indigo-500/20">
+                    <h3 class="text-4xl font-black text-indigo-400 uppercase tracking-widest mb-10 text-center">Espacios de Reflexión</h3>
+                    <div class="grid grid-cols-3 gap-10">
+                        <div class="space-y-4">
+                            <p class="text-xl text-slate-400 font-bold uppercase">¿Curva Disruptiva?</p>
+                            <textarea class="premium-input text-xl py-6 px-8 h-32 bg-slate-900/50" placeholder="¿Qué tan disruptiva fue la idea de tu equipo?"></textarea>
+                        </div>
+                        <div class="space-y-4">
+                            <p class="text-xl text-slate-400 font-bold uppercase">¿Adaptación de Idea?</p>
+                            <textarea class="premium-input text-xl py-6 px-8 h-32 bg-slate-900/50" placeholder="¿Hubo alguna adaptación importante en la idea inicial?"></textarea>
+                        </div>
+                        <div class="space-y-4">
+                            <p class="text-xl text-slate-400 font-bold uppercase">¿Competencia Localizada?</p>
+                            <textarea class="premium-input text-xl py-6 px-8 h-32 bg-slate-900/50" placeholder="¿Identificas competidores en tu nuevo Océano Azul?"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 10: CIERRE -->
+        <section class="slide" id="slide-10">
+            <div class="max-w-[1700px] mx-auto w-full text-center space-y-32">
+                <div class="relative inline-block">
+                    <div class="absolute -inset-10 bg-indigo-500/20 blur-[100px] rounded-full"></div>
+                    <p class="relative text-[3.5rem] md:text-[5rem] font-black italic leading-[1.1] tracking-tighter">
+                        "Si el océano está rojo, no hace falta nadar más rápido. <br>
+                        <span class="text-indigo-400 underline decoration-white/20 decoration-[15px] underline-offset-[10px]">Hace falta cambiar el mapa.</span>"
+                    </p>
+                </div>
+                <div class="flex flex-col items-center space-y-8 opacity-60">
+                    <div class="w-32 h-1 bg-gradient-to-r from-transparent via-indigo-500 to-transparent"></div>
+                    <div class="text-slate-400 font-mono tracking-[1em] text-[14px] uppercase font-bold">© 2026 InnovaLab • Executive Session • Strategic Excellence</div>
+                    <button onclick="restartSession()" class="opacity-100 mt-4 px-16 py-6 rounded-full border border-white/20 bg-white/5 hover:bg-indigo-600/20 hover:border-indigo-500/40 text-slate-400 hover:text-white font-black uppercase tracking-[0.4em] text-[12px] transition-all duration-300">
+                        ↺ Nuevo Equipo
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODAL AUDITORÍA - DESIGN REFINED -->
+    <div id="final-modal" class="modal-overlay">
+        <div class="modal-result scale-95 opacity-0 transition-all duration-700">
+            <div class="flex justify-between items-start mb-12 text-left">
+                <div>
+                    <div class="flex items-center gap-4 mb-2">
+                        <span class="px-4 py-1 bg-indigo-500/20 text-indigo-400 text-[9px] font-black uppercase tracking-widest rounded-full border border-indigo-500/20">Nivel Executive</span>
+                        <span class="text-slate-600">/</span>
+                        <span class="text-slate-500 text-[9px] font-black uppercase tracking-widest" id="res-timestamp">Cloud Synced</span>
+                    </div>
+                    <h2 class="text-5xl font-black gradient-text tracking-tighter uppercase leading-none" id="modal-project-title">TU ESTRATEGIA</h2>
+                    <p class="text-lg text-slate-500 font-light uppercase tracking-[0.4em] mt-4">Innovación de Valor Desbloqueada</p>
+                </div>
+                <div class="w-32 h-32 rounded-full bg-indigo-500/10 flex items-center justify-center text-6xl shadow-[0_0_50px_rgba(79,70,229,0.2)] border border-indigo-500/20">
+                    🏆
+                </div>
+            </div>
+            
+            <div class="grid md:grid-cols-[1.2fr_1.8fr] gap-16">
+                <div class="space-y-8">
+                    <div class="glass-card p-4 bg-slate-950/60 border-white/5 shadow-2xl overflow-hidden divide-y divide-white/5">
+                        <div class="audit-row"><span class="audit-label text-red-500">Eliminar</span><span id="res-elim" class="audit-content"></span></div>
+                        <div class="audit-row"><span class="audit-label text-orange-400">Reducir</span><span id="res-red" class="audit-content"></span></div>
+                        <div class="audit-row"><span class="audit-label text-blue-400">Elevar</span><span id="res-inc" class="audit-content"></span></div>
+                        <div class="audit-row"><span class="audit-label text-green-400">Crear</span><span id="res-cre" class="audit-content"></span></div>
+                    </div>
+                    <button id="download-final-pdf" onclick="exportPDF()" class="bg-indigo-600 hover:bg-indigo-500 w-full py-6 rounded-[1.5rem] text-[10px] uppercase tracking-[0.3em] font-black shadow-xl transition-all flex items-center justify-center gap-4">
+                        <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+                        Exportar Reporte Ejecutivo
+                    </button>
+                </div>
+                <div class="glass-card p-12 flex flex-col bg-slate-900 shadow-inner h-[550px] border-white/5">
+                    <div class="flex justify-between items-center mb-6">
+                        <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Cuadro Estratégico Proyectado</span>
+                        <div class="flex gap-4">
+                            <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-red-500"></div><span class="text-[8px] text-slate-500 font-bold uppercase">Rojo</span></div>
+                            <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-cyan-400"></div><span class="text-[8px] text-slate-500 font-bold uppercase">Azul</span></div>
+                        </div>
+                    </div>
+                    <canvas id="userProjectCanvas" class="flex-grow"></canvas>
+                </div>
+            </div>
+            <div class="mt-16 text-center">
+                <button onclick="closeModal()" class="px-20 py-5 bg-white/5 border border-white/10 rounded-full text-[10px] font-black uppercase tracking-[0.3em] hover:bg-white/10 transition-all text-slate-300">
+                    Ver Comunidad de Innovadores
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Minimal Navigation Footer -->
+    <footer class="fixed bottom-10 left-0 w-full px-12 flex justify-between items-center pointer-events-none z-[100]">
+        <button id="prev-btn" class="pointer-events-auto w-16 h-16 rounded-full bg-white/5 border border-white/10 text-slate-500 hover:bg-white/10 hover:text-white transition-all flex items-center justify-center backdrop-blur-xl disabled:opacity-0 active:scale-95">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        
+        <div class="px-6 py-2 rounded-full bg-black/20 border border-white/5 backdrop-blur-md opacity-20 hover:opacity-100 transition-opacity">
+            <span class="text-[8px] font-black text-slate-500 uppercase tracking-[0.5em]">Flechas o Apuntador para Navegar</span>
+            <span id="current-num" class="hidden">1</span>
+        </div>
+
+        <button id="next-btn" class="pointer-events-auto w-16 h-16 rounded-full bg-indigo-600/50 text-white border border-indigo-500/30 hover:bg-indigo-600 hover:scale-110 shadow-2xl transition-all flex items-center justify-center backdrop-blur-xl active:scale-95">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+    </footer>
+
+    <script type="module">
+        // --- NAVEGACIÓN CORE (Independiente de Firebase) ---
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const nextBtn = document.getElementById('next-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const numDisplay = document.getElementById('current-num');
+        const navPillsContainer = document.getElementById('nav-pills-container');
+
+        // Generar pills de progreso
+        if (navPillsContainer) {
+            navPillsContainer.innerHTML = '';
+            for(let i=0; i<slides.length; i++){
+                const pill = document.createElement('div');
+                pill.className = "progress-pill" + (i===0 ? " active" : "");
+                navPillsContainer.appendChild(pill);
+            }
+        }
+        const progressPills = document.querySelectorAll('.progress-pill');
+
+        function updateUI() {
+            slides.forEach((s, i) => s.classList.toggle('active', i === currentSlide));
+            if (progressPills.length > 0) {
+                progressPills.forEach((p, i) => p.classList.toggle('active', i <= currentSlide));
+            }
+            if (numDisplay) numDisplay.textContent = currentSlide + 1;
+            if (prevBtn) prevBtn.disabled = currentSlide === 0;
+            
+            // Cerrar cualquier panel abierto al cambiar de slide
+            document.querySelectorAll('.info-panel').forEach(p => p.classList.remove('open'));
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            if(currentSlide === 7) setTimeout(initCirqueChart, 250);
+        }
+
+        // --- SISTEMA DE REGISTRO Y CASOS ---
+        const cases = ['Gimnasios', 'Restaurantes de comida rápida', 'Cafeterías', 'Servicios de taxi', 'Hoteles de bajo costo', 'Tiendas de ropa', 'Cines'];
+        let teamData = JSON.parse(localStorage.getItem('lab_session_v1')) || { name: '', assignedCase: '' };
+
+        const btnStartLab = document.getElementById('btn-start-lab');
+        const teamInput = document.getElementById('team-name-input');
+        const workshopTitle = document.getElementById('workshop-dynamic-title');
+
+        if (teamData.name) {
+            teamInput.value = teamData.name;
+            applyTeamData();
+        }
+
+        function applyTeamData() {
+            if (teamData.assignedCase && workshopTitle) {
+                workshopTitle.innerHTML = `¡Tu equipo ha sido asignado al caso de <span class="text-white underline decoration-indigo-500/50 underline-offset-8">${teamData.assignedCase}</span>!`;
+                const display = document.getElementById('assigned-case-display');
+                const nameLabel = document.getElementById('case-name');
+                if (display && nameLabel) {
+                    display.classList.remove('hidden');
+                    nameLabel.textContent = teamData.assignedCase;
+                }
+            }
+        }
+
+        if (btnStartLab) btnStartLab.onclick = () => {
+            const name = teamInput.value.trim();
+            if (!name) return alert("Por favor ingresa un nombre para tu equipo");
+            
+            if (!teamData.assignedCase) {
+                teamData.assignedCase = cases[Math.floor(Math.random() * cases.length)];
+            }
+            teamData.name = name;
+            localStorage.setItem('lab_session_v1', JSON.stringify(teamData));
+            
+            applyTeamData();
+            currentSlide = 2; // Saltar a Océano Rojo
+            updateUI();
+        };
+
+        if (nextBtn) nextBtn.onclick = () => { 
+            if(currentSlide === 0 && !teamData.name) {
+                currentSlide = 1;
+                updateUI();
+                return;
+            }
+            if(currentSlide < slides.length-1) { currentSlide++; updateUI(); } 
+        };
+        if (prevBtn) prevBtn.onclick = () => { if(currentSlide > 0) { currentSlide--; updateUI(); } };
+
+        window.onkeydown = (e) => { 
+            const isTyping = ['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName);
+            if (!isTyping) {
+                if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); if(nextBtn) nextBtn.click(); }
+                if (e.key === 'ArrowLeft') if(prevBtn) prevBtn.click();
+                if (e.key === 'Escape') document.querySelectorAll('.info-panel').forEach(p => p.classList.remove('open'));
+            }
+        };
+
+        window.toggleInfo = (id) => {
+            const el = document.getElementById(id);
+            if(el) el.classList.toggle('open');
+        };
+
+        window.closeModal = () => { 
+            const modal = document.getElementById('final-modal');
+            if(modal) modal.classList.remove('active'); 
+            currentSlide = 9; 
+            updateUI(); 
+        };
+
+        // Persistencia Local (Auto-save)
+        document.querySelectorAll('.premium-input, textarea').forEach(input => {
+            input.addEventListener('input', (e) => {
+                localStorage.setItem(`blueprint_v3_${e.target.id}`, e.target.value);
+            });
+            const saved = localStorage.getItem(`blueprint_v3_${input.id}`);
+            if (saved) input.value = saved;
+        });
+
+        // --- INTEGRACIÓN FIREBASE ---
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, onSnapshot, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const GS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbw7O4jcJ9kVDHOKgAIesi7umclJ7Y44PU5TVoW8__qy5MVtqFEJxJu2TeSYwKOcpclN-w/exec";
+        
+        let db, auth, user = null;
+        let appId = 'ocean-blue-cloud-2026';
+
+        try {
+            appId = typeof __app_id !== 'undefined' ? __app_id : 'ocean-blue-cloud-2026';
+            const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+            
+            if (firebaseConfig.apiKey) {
+                const app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+                startAuth();
+            }
+        } catch (e) {
+            console.warn("Offline Mode: Firebase config error.");
+        }
+
+        async function startAuth() {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else { await signInAnonymously(auth); }
+                onAuthStateChanged(auth, (u) => { 
+                    if(u) { 
+                        user = u; 
+                        if(typeof loadPersonalProject === 'function') loadPersonalProject(); 
+                        if(typeof setupGallerySync === 'function') setupGallerySync(); 
+                    } 
+                });
+            } catch (e) { console.error("Auth Exception:", e); }
+        }
+
+        async function syncToGoogleSheets(payload) {
+            if (!GS_WEBAPP_URL) return;
+            try {
+                // Sincronización con modo no-cors para evitar problemas de preflight
+                const body = JSON.stringify(payload);
+                await fetch(GS_WEBAPP_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    cache: 'no-cache',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: body
+                });
+                return true;
+            } catch (err) { 
+                console.warn("GS Sync Error", err); 
+                return false;
+            }
+        }
+
+        document.getElementById('final-unlock-btn').onclick = async () => {
+            const btn = document.getElementById('final-unlock-btn');
+            const data = {
+                name: (document.getElementById('p-name').value || '').trim(),
+                context: (document.getElementById('p-red-context').value || '').trim(),
+                elim: (document.getElementById('user-elim').value || '').trim(),
+                red: (document.getElementById('user-red').value || '').trim(),
+                inc: (document.getElementById('user-inc').value || '').trim(),
+                crear: (document.getElementById('user-crear').value || '').trim(),
+                teamName: teamData.name,
+                assignedCase: teamData.assignedCase
+            };
+
+            if (!data.name && !data.elim && !data.inc && !data.crear) {
+                alert('Por favor completa al menos el Concepto de Innovación y la Matriz ERRC antes de continuar.');
+                return;
+            }
+
+            const originalText = btn.textContent;
+            btn.textContent = "SINCRONIZANDO ESTRATEGIA...";
+            btn.disabled = true;
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+
+            try {
+                // 1. Firebase Sync (Optimista)
+                if (db && user) {
+                    try {
+                        await Promise.race([
+                            setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'personal_final_v1', 'main'), { ...data, updatedAt: serverTimestamp() }),
+                            setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'gallery_final_v18', user.uid), { ...data, updatedAt: serverTimestamp() }),
+                            new Promise((_, reject) => setTimeout(() => reject(new Error('Firebase Timeout')), 5000))
+                        ]);
+                    } catch (fbErr) {
+                        console.warn('Firebase sync delayed or failed:', fbErr.message);
+                    }
+                }
+
+                // 2. Google Sheets Sync (Doble Acción)
+                const teamSync = syncToGoogleSheets({ 
+                    action: 'saveTeam',
+                    teamName: teamData.name,
+                    industry: teamData.assignedCase,
+                    elim: data.elim,
+                    red: data.red,
+                    inc: data.inc,
+                    crear: data.crear
+                });
+
+                const personalSync = syncToGoogleSheets({ 
+                    action: 'savePersonal',
+                    name: data.name,
+                    context: data.context,
+                    elim: data.elim,
+                    red: data.red,
+                    inc: data.inc,
+                    crear: data.crear
+                });
+
+                await Promise.all([teamSync, personalSync]);
+
+                // 3. UI Update & Modal
+                document.getElementById('modal-project-title').textContent = data.name.toUpperCase() || "TU PROYECTO";
+                document.getElementById('res-elim').textContent = data.elim || '---';
+                document.getElementById('res-red').textContent = data.red || '---';
+                document.getElementById('res-inc').textContent = data.inc || '---';
+                document.getElementById('res-cre').textContent = data.crear || '---';
+                document.getElementById('res-timestamp').textContent = new Date().toLocaleString('es-CO', { dateStyle: 'short', timeStyle: 'short' });
+
+                btn.textContent = "ESTRATEGIA DESBLOQUEADA ✓";
+                btn.classList.remove('bg-indigo-600');
+                btn.classList.add('bg-emerald-600');
+
+                setTimeout(() => {
+                    document.getElementById('final-modal').classList.add('active');
+                    setTimeout(() => {
+                        const inner = document.querySelector('#final-modal .modal-result');
+                        if (inner) { inner.style.transform = 'scale(1)'; inner.style.opacity = '1'; }
+                    }, 50);
+                    initUserChart(data);
+                }, 800);
+
+            } catch (err) {
+                console.error("Critical Sync Error:", err);
+                alert("Hubo un problema al sincronizar. La estrategia se mostrará localmente.");
+                // Mostrar modal de todos modos para no bloquear al usuario
+                document.getElementById('final-modal').classList.add('active');
+                initUserChart(data);
+            } finally {
+                // No rehabilitamos el botón para evitar clics dobles una vez desbloqueado
+                // btn.disabled = false;
+            }
+        };
+
+        function initUserChart(data) {
+            const canvas = document.getElementById('userProjectCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.parentElement.clientWidth; canvas.height = 450;
+            const factors = ['Costo', 'Complej.', 'Utilidad', 'Innova.', 'Exclu.'];
+            const redData = [9, 8, 4, 3, 2];
+            const blueData = [data.elim?2:5, data.red?3:7, data.inc?10:6, data.crear?10:5, (data.crear&&data.inc)?10:7];
+            
+            function draw(d, color, shadowCol) {
+                const p = 80; const w = canvas.width - p*2; const h = canvas.height - p*2;
+                const step = w / (factors.length - 1);
+                ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = 10; ctx.lineCap = 'round';
+                ctx.shadowBlur = 30; ctx.shadowColor = shadowCol;
+                d.forEach((v, i) => {
+                    const x = p + i*step; const y = canvas.height - p - (v*h/10);
+                    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+                });
+                ctx.stroke(); ctx.shadowBlur = 0;
+                d.forEach((v, i) => {
+                    const x = p + i*step; const y = canvas.height - p - (v*h/10);
+                    ctx.fillStyle = color; ctx.beginPath(); ctx.arc(x,y,14,0,Math.PI*2); ctx.fill();
+                    ctx.fillStyle = '#94a3b8'; ctx.font = 'bold 20px sans-serif'; ctx.textAlign = 'center';
+                    ctx.fillText(factors[i], x, canvas.height-20);
+                });
+            }
+            ctx.clearRect(0,0,canvas.width, canvas.height);
+            draw(redData, '#f43f5e', 'rgba(244,63,94,0.4)'); draw(blueData, '#06b6d4', 'rgba(6,182,212,0.4)');
+        }
+
+        function initCirqueChart() {
+            const canvas = document.getElementById('cirqueCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.parentElement.clientWidth; canvas.height = canvas.parentElement.clientHeight;
+            const factors = ['Precio', 'Animales', 'Estrellas', 'Payasos', 'Pistas', 'Música', 'Arte'];
+            const redData = [7, 10, 9, 8, 9, 2, 1]; const blueData = [9, 1, 1, 2, 1, 10, 10];
+            function draw(data, color, shadowCol) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                const pSide = 100; const pBottom = 160; const w = canvas.width - pSide*2; const h = canvas.height - 240;
+                const step = w / (factors.length - 1);
+                ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+                for(let i=0; i<=10; i+=2) { const y = canvas.height - pBottom - (i*h/10); ctx.beginPath(); ctx.moveTo(pSide, y); ctx.lineTo(canvas.width-pSide,y); ctx.stroke(); }
+                ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = 12; ctx.lineCap = 'round'; ctx.shadowBlur = 25; ctx.shadowColor = shadowCol;
+                data.forEach((v, i) => { const x = pSide + i * step; const y = canvas.height - pBottom - (v * h / 10); if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); });
+                ctx.stroke(); ctx.shadowBlur = 0;
+                data.forEach((v, i) => {
+                    const x = pSide + i * step; const y = canvas.height - pBottom - (v * h / 10);
+                    ctx.fillStyle = color; ctx.beginPath(); ctx.arc(x,y,16,0,Math.PI*2); ctx.fill();
+                    ctx.save(); ctx.translate(x, canvas.height-pBottom+50); ctx.rotate(Math.PI/6);
+                    ctx.fillStyle = '#94a3b8'; ctx.font = '800 20px Plus Jakarta Sans'; ctx.fillText(factors[i],0,0); ctx.restore();
+                });
+            }
+            draw(redData, '#f43f5e', 'rgba(244,63,94,0.4)');
+            document.getElementById('btn-red').onclick = () => draw(redData, '#f43f5e', 'rgba(244,63,94,0.4)');
+            document.getElementById('btn-blue').onclick = () => draw(blueData, '#06b6d4', 'rgba(6,182,212,0.4)');
+        }
+
+        const setupGallerySync = () => {
+            const col = collection(db, 'artifacts', appId, 'public', 'data', 'gallery_final_v18');
+            onSnapshot(col, (snap) => {
+                const body = document.getElementById('gallery-body');
+                body.innerHTML = '';
+                snap.forEach(doc => {
+                    const d = doc.data();
+                    renderGalleryCard(d, body);
+                });
+                
+                // --- FALLBACK LOCAL PARA PREVISUALIZACIÓN INMEDIATA ---
+                const localData = {
+                    name: (document.getElementById('p-name').value || '').trim(),
+                    context: (document.getElementById('p-red-context').value || '').trim(),
+                    elim: (document.getElementById('user-elim').value || '').trim(),
+                    red: (document.getElementById('user-red').value || '').trim(),
+                    inc: (document.getElementById('user-inc').value || '').trim(),
+                    crear: (document.getElementById('user-crear').value || '').trim(),
+                    teamName: teamData.name,
+                    assignedCase: teamData.assignedCase,
+                    isLocal: true
+                };
+
+                if (localData.name || localData.elim) {
+                    renderGalleryCard(localData, body, true);
+                }
+            });
+        };
+
+        const renderGalleryCard = (d, container, isHighlight = false) => {
+            const card = document.createElement('div');
+            card.className = `gallery-card glass-card shadow-lg ${isHighlight ? 'ring-2 ring-indigo-500/50 bg-indigo-500/5' : ''}`;
+            card.innerHTML = `
+                <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-black text-indigo-400 uppercase text-lg tracking-[0.3em]">${d.name || 'ANÓNIMO'}</h4>
+                    <span class="text-[10px] font-black bg-white/5 px-3 py-1 rounded-full text-slate-500 uppercase tracking-widest">
+                        ${isHighlight ? 'TU ESTRATEGIA' : (d.assignedCase || 'Caso General')}
+                    </span>
+                </div>
+                <p class="text-xl text-slate-400 mb-2 font-bold uppercase tracking-wider">${d.teamName || 'Equipo'}</p>
+                <p class="text-2xl text-slate-300 mb-8 h-20 overflow-hidden italic leading-relaxed">"${d.context || 'Estrategia'}"</p>
+                <div class="grid grid-cols-2 gap-6 text-[12px] font-black uppercase tracking-widest opacity-90">
+                    <div class="text-red-400 flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-red-500"></span>Elim: ${d.elim ? '✓' : '-'}</div>
+                    <div class="text-orange-400 flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-orange-500"></span>Red: ${d.red ? '✓' : '-'}</div>
+                    <div class="text-blue-400 flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-blue-500"></span>Elev: ${d.inc ? '✓' : '-'}</div>
+                    <div class="text-green-400 flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-green-500"></span>Crea: ${d.crear ? '✓' : '-'}</div>
+                </div>
+            `;
+            container.prepend(card);
+        };
+
+        const loadPersonalProject = async () => {
+            const docRef = doc(db, 'artifacts', appId, 'users', user.uid, 'personal_final_v1', 'main');
+            onSnapshot(docRef, (snap) => {
+                if(snap.exists()) {
+                    const d = snap.data();
+                    document.getElementById('p-name').value = d.name || '';
+                    document.getElementById('p-red-context').value = d.context || '';
+                    document.getElementById('user-elim').value = d.elim || '';
+                    document.getElementById('user-red').value = d.red || '';
+                    document.getElementById('user-inc').value = d.inc || '';
+                    document.getElementById('user-crear').value = d.crear || '';
+                }
+            });
+        };
+
+        updateUI();
+
+        // ── PDF EXPORT ─────────────────────────────────────────────────────
+        window.exportPDF = async () => {
+            const btn = document.getElementById('download-final-pdf');
+            const original = btn.innerHTML;
+            btn.innerHTML = '<span class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span> Procesando...';
+            btn.disabled = true;
+
+            try {
+                // Forzar un pequeño delay para asegurar renderizado de charts
+                await new Promise(r => setTimeout(r, 500));
+
+                const modal = document.querySelector('#final-modal .modal-result');
+                const canvas = await html2canvas(modal, {
+                    backgroundColor: '#020617', // Match dark-bg
+                    scale: 3, // Mayor resolución
+                    useCORS: true,
+                    logging: false,
+                    allowTaint: true,
+                    onclone: (clonedDoc) => {
+                        const clonedModal = clonedDoc.querySelector('#final-modal .modal-result');
+                        clonedModal.style.transform = 'none';
+                        clonedModal.style.opacity = '1';
+                    }
+                });
+
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({ 
+                    orientation: 'landscape', 
+                    unit: 'px', 
+                    format: [canvas.width, canvas.height] 
+                });
+
+                const imgData = canvas.toDataURL('image/png', 1.0);
+                pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height, undefined, 'FAST');
+
+                const title = (document.getElementById('modal-project-title').textContent || 'estrategia').replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ ]/g, '').trim();
+                pdf.save(`OceanLab_${title.replace(/\s+/g, '_')}_${new Date().toISOString().slice(0,10)}.pdf`);
+            } catch (err) {
+                console.error('PDF export error:', err);
+                alert('Error al generar el PDF. Los gráficos complejos pueden requerir más tiempo.');
+            } finally {
+                btn.innerHTML = original;
+                btn.disabled = false;
+            }
+        };
+
+        // ── SESSION RESTART ────────────────────────────────────────────────
+        window.restartSession = () => {
+            if (!confirm('¿Deseas iniciar una sesión nueva? Se borrarán los datos del equipo actual.')) return;
+            localStorage.removeItem('lab_session_v1');
+            // Limpiar campos guardados del blueprint
+            Object.keys(localStorage).forEach(k => { if (k.startsWith('blueprint_v3_')) localStorage.removeItem(k); });
+            location.reload();
+        };
+
+    </script>
+    <!-- Escala de presentación: zoom uniforme sobre todo el body -->
+    <script>
+        (function () {
+            var DESIGN_W = 1700; // ancho de diseño de referencia (px)
+            function fitPresentation() {
+                var w = window.innerWidth;
+                var zoom = Math.min(w / DESIGN_W, 1); // nunca escala arriba de 1
+                document.body.style.zoom = zoom;
+                // Compensar la altura para evitar scroll ficticio
+                document.body.style.minHeight = (window.innerHeight / zoom) + 'px';
+            }
+            fitPresentation();
+            window.addEventListener('resize', fitPresentation);
+        })();
+    </script>
+</body>
+</html>
